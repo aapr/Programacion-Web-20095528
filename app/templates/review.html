@@ -104,50 +104,34 @@
 
         	var results = function(data){
         		var container = document.getElementById("container");
-
-        		var ul = document.createElement("ul");
-
                 container.innerHTML="";
+        		var ul = document.createElement("ul");
+                
+                container.appendChild(ul);
 
         		for (var i = data.results.length - 1; i >= 0; i--) {
 
-        			/* movie list*/
-        			var li = document.createElement("li");
-
-        			/* movie container*/
-        			var movie = document.createElement("div");
-
-        			/* title */
+                    /* poster */
+                    var poster = document.createElement("img");
+                    poster.setAttribute("src", posterBaseUrl + data.results[i].poster_path);
+        			
+                    /* title */
         			var title = document.createElement("h1");
         			title.innerHTML = data.results[i].title;
-        			movie.appendChild(title);
-        			
-        			/* poster */
-        			var poster = document.createElement("img");
-        			poster.setAttribute("src", posterBaseUrl + data.results[i].poster_path);
-        			
+
+                    /* movie container*/
+                    var movie = document.createElement("div");        			
+                    movie.appendChild(title);
                     movie.appendChild(poster);
                     
-        			li.appendChild(movie);
-
-        			ul.appendChild(li);
-                    
-        			container.appendChild(ul);
-
-        			/* todo list:
-					- segment li on blocks of 2-3 results per page
-					
-	                */
-
-        			/* end */
+        			ul.appendChild(document.createElement("li").appendChild(movie));
+        			/* TODO: segment li on blocks of 2-3 results per page*/
         		};
-
 
                 var page = data.page;
                 var total_pages = data.total_pages; 
 
                 pagination( page, total_pages);
-
         	}
 
         	var pagination = function(pNum, pTotal){
