@@ -103,6 +103,7 @@
 
 
         	var results = function(data){
+                console.log(data);
         		var container = document.getElementById("container");
                 container.innerHTML="";
         		var ul = document.createElement("ul");
@@ -114,17 +115,27 @@
                     /* poster */
                     var poster = document.createElement("img");
                     poster.setAttribute("src", posterBaseUrl + data.results[i].poster_path);
-        			
+        			poster.className += "poster";
                     /* title */
         			var title = document.createElement("h1");
         			title.innerHTML = data.results[i].title;
+                    title.className +="title";
+                    /* overview */
+                    var overview = document.createElement("p");
+                    overview.innerHTML = data.results[i].overview;
+                    overview.className +="overview";
 
                     /* movie container*/
                     var movie = document.createElement("div");        			
                     movie.appendChild(title);
+                    movie.appendChild(overview);
                     movie.appendChild(poster);
                     
         			ul.appendChild(document.createElement("li").appendChild(movie));
+
+                    var bt = document.createElement("button");
+                    bt.innerHTML = 'post';
+                    movie.appendChild(bt);
         			/* TODO: segment li on blocks of 2-3 results per page*/
         		};
 
