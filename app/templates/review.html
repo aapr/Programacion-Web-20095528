@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+			<link rel="stylesheet" href="../static/css/style.css" media="screen" title="no title" charset="utf-8">
+            <link rel="stylesheet" href="../static/css/awesomplete.css" />
+	</head>
+	<body>
+		<form id="search">
+	        <div class="form-group">
+	            <label for="name">Name</label>
+	            <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic">
+            </div>
+            <div class="form-group">
+                <label for="title">Review Title:</label>
+                <input type="text" class="form-control" id="title" name="reviewTitle" placeholder="Review Title">
+            </div>
+            <div class="form-group">
+                <label for="desc">Description:</label>
+                <textarea type="text" class="form-control" id="desc" name="description" placeholder="Lorem ipsum dolor sit amet"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="score">Score:</label>
+                <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
+            </div>
+            <div class="form-group">
+                <label for="user">Username:</label>
+                <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
+	        </div>
+        	<button id="submit" type="submit">Submit</button>
+        	<div id="container"> </div>
+        	<div id="pagination"> </div>
+    	</form>
+        <script src="../static/js/awesomplete.js" async></script>
+		<script>
+
+			/* todo list:
+				- prettify html
+				
+            */
+			var xmlhttp = new XMLHttpRequest();
+        	var url = "";
+        	var api_key = "382652c5762a69290695a528a982a2b9"; 
+        	var posterBaseUrl = "http://image.tmdb.org/t/p/w150";
+        	
+            var defaultPage = 1;
+            var currentPage = 1;
+
+        	var data = {};
+        	/*xmlhttp.withCredentials = true; -> this fail for some reason!?*/
+
+        	var get = function (name, pNum) {
+        		/* httpRequest */
+	            xmlhttp.open("GET", "https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&language=en-US&page="+pNum+"&query="+name, true);
+	            xmlhttp.send();
+
+	            xmlhttp.onreadystatechange = function () {
+	                if (this.readyState == 4 && this.status == 200) {
+	                    /*console.log(JSON.parse(this.responseText)); */
+	                    results(JSON.parse(this.responseText));
+
+	                    /* todo list
+	                    	- maybe use response instead of params
+	                    */
+	                    /*
+                            pagination(name, pNum);
+                        */
+
+
+	                }
+	                else if (this.readyState == 4 && this.status == 404){
+	                  /* */ 
+	                }
+	                /* */
+	            };
+  
+        	}
+            var post = function(movie) {
+
+                var data = new FormData();
+                data.append('id', movie["id"]);
+                data.append('title', movie["title"]);
+                data.append('description', movie["overview"]);
+                if(movie.poster_path) {
+                    data.append('poster', movie["poster_path"])
+                }
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "http://localhost:5000/reviews", true);
+                xmlhttp.send(data);
+
+                xmlhttp.onreadystatechange = function () {
+
+                    var container = document.getElementById('container');
+                    if (this.readyState == 4 && this.status == 200) {
+                        /* */ 
+                    }
+                    else if (this.readyState == 4 && this.status == 404) {
+                        /* */ 
+                    }
+                }
+            }
+
+
+        	var results = function(data){
+        		var container = document.getElementById("container");
+
+        		var ul = document.createElement("ul");
+
+                container.innerHTML="";
+
+        		for (var i = data.results.length - 1; i >= 0; i--) {
+
+        			/* movie list*/
+        			var li = document.createElement("li");
+
+        			/* movie container*/
+        			var movie = document.createElement("div");
+
+        			/* title */
+        			var title = document.createElement("h1");
+        			title.innerHTML = data.results[i].title;
+        			movie.appendChild(title);
+        			
+        			/* poster */
+        			var poster = document.createElement("img");
+        			poster.setAttribute("src", posterBaseUrl + data.results[i].poster_path);
+        			
+                    movie.appendChild(poster);
+                    
+        			li.appendChild(movie);
+
+        			ul.appendChild(li);
+                    
+        			container.appendChild(ul);
+
+        			/* todo list:
+					- segment li on blocks of 2-3 results per page
+					
+	                */
+
+        			/* end */
+        		};
+
+
+                var page = data.page;
+                var total_pages = data.total_pages; 
+
+                pagination( page, total_pages);
+
+        	}
+
+        	var pagination = function(pNum, pTotal){
+
+
+        		var pag = document.getElementById("pagination");
+                var t = pTotal;
+
+                pag.innerHTML="";
+
+                if (t > 1){
+
+
+                    /* next page*/
+                    var next = document.createElement('a');
+                    next.innerHTML = "next";
+                    pag.appendChild(next);
+
+                    for (var i = 1 ; i <= t ; ++i) {
+                        var nPagina = document.createElement('a');
+                        nPagina.innerHTML = i;
+                        pag.appendChild(nPagina);
+                    };
+
+
+                    /* prev page*/
+                    var prev = document.createElement('a');
+                    prev.innerHTML = "prev";
+                    pag.appendChild(prev);
+
+                }
+              
+
+                /* todo list:
+				- make onclick functions 
+				
+                */
+
+        	}
+
+        	var form = document.getElementById("search");
+        	form.onsubmit = function(response) {
+	            response.preventDefault();
+
+	            var name = document.getElementById("name").value;
+	           	
+                defaultPage = response.page;
+               
+                
+	            get(name, response.page);
+                /*
+                    pagination
+                */
+
+	            name.value = "";
+        	};
+		</script>
+	</body>
+</html>
