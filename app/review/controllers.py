@@ -65,7 +65,7 @@ def postFormData():
 		
 	return render_template('review.html')
 
-@movie.route('/', methods=['POST'])
+#@movie.route('/', methods=['POST'])
 def createMovie():
 	if request.method == 'POST':
 		name = request.form['name']

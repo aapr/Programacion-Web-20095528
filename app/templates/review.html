@@ -29,9 +29,9 @@
                 <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
 	        </div>
         	<button id="submit" type="submit">Submit</button>
-        	<div id="container"> </div>
         	<div id="pagination"> </div>
     	</form>
+        <div id="container"> </div>
         <script src="../static/js/awesomplete.js" async></script>
 		<script>
 
@@ -47,7 +47,7 @@
             var defaultPage = 1;
             var currentPage = 1;
 
-        	var data = {};
+            var globaldata;
         	/*xmlhttp.withCredentials = true; -> this fail for some reason!?*/
 
         	var get = function (name, pNum) {
@@ -103,6 +103,8 @@
 
 
         	var results = function(data){
+
+                globaldata = data.results;
                 console.log(data);
         		var container = document.getElementById("container");
                 container.innerHTML="";
@@ -135,6 +137,10 @@
 
                     var bt = document.createElement("button");
                     bt.innerHTML = 'post';
+                    bt.className += "button"
+                    bt.id = data.results[i].id;
+                    bt.setAttribute("onclick", "btpost(this)");
+
                     movie.appendChild(bt);
         			/* TODO: segment li on blocks of 2-3 results per page*/
         		};
@@ -144,6 +150,21 @@
 
                 pagination( page, total_pages);
         	}
+
+            var btpost = function(bt){
+                var target = bt.id;
+                var buttons = document.getElementsByClassName("button");
+                var buttonsCount = buttons.length;
+
+                for(var i = 0; i < buttonsCount; i++){
+                    var is = buttons[i].id;
+
+                    if(is == target){
+                        var t = globaldata[i].id
+                        console.log(t);
+                    }  
+                }
+            }
 
         	var pagination = function(pNum, pTotal){
 
