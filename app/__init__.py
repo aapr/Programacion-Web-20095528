@@ -1,7 +1,8 @@
 from flask import Flask
-from app.models import db
-from app.review.controllers import main,movie
+
 from app.config import Config
+from app.models import db
+from app.review.controllers import main, movie
 
 app = Flask(__name__)
 
