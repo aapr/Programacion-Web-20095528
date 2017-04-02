@@ -1,225 +1,173 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<!-- Latest compiled and minified CSS -->
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-			<link rel="stylesheet" href="../static/css/style.css" media="screen" title="no title" charset="utf-8">
-            <link rel="stylesheet" href="../static/css/awesomplete.css" />
-	</head>
-	<body>
-		<form id="search">
-	        <div class="form-group">
-	            <label for="name">Name</label>
-	            <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic">
-            </div>
-            <div class="form-group">
-                <label for="title">Review Title:</label>
-                <input type="text" class="form-control" id="title" name="reviewTitle" placeholder="Review Title">
-            </div>
-            <div class="form-group">
-                <label for="desc">Description:</label>
-                <textarea type="text" class="form-control" id="desc" name="description" placeholder="Lorem ipsum dolor sit amet"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="score">Score:</label>
-                <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
-            </div>
-            <div class="form-group">
-                <label for="user">Username:</label>
-                <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
-	        </div>
-        	<button id="submit" type="submit">Submit</button>
-        	<div id="pagination"> </div>
-    	</form>
-        <div id="container"> </div>
-        <script src="../static/js/awesomplete.js" async></script>
-		<script>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/style.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="../static/css/awesomplete.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<form id="search">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" data-list="#mylist">
+    </div>
+    <button id="submit" type="submit">Submit</button>
+    <div id="pagination"></div>
+</form>
+<form id="review">
+    <div class="form-group">
+        <label for="title">Review Title:</label>
+        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails">
+    </div>
+    <div class="form-group">
+        <label for="desc">Description:</label>
+        <textarea type="text" class="form-control" id="desc" name="description"
+                  placeholder="Lorem ipsum dolor sit amet"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="score">Score:</label>
+        <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
+    </div>
+    <div class="form-group">
+        <label for="user">Username:</label>
+        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
+    </div>
+    <button id="review_button" type="submit">Post Review</button>
+</form>
+<ul id="mylist" hidden>
+	<li>Ada</li>
+	<li>Java</li>
+	<li>JavaScript</li>
+	<li>Brainfuck</li>
+	<li>LOLCODE</li>
+	<li>Node.js</li>
+	<li>Ruby on Rails</li>
+</ul>
+<div id="container"></div>
+<script src="../static/js/awesomplete.js" async>
 
-			/* todo list:
-				- prettify html
-				
-            */
-			var xmlhttp = new XMLHttpRequest();
-        	var url = "";
-        	var api_key = "382652c5762a69290695a528a982a2b9"; 
-        	var posterBaseUrl = "http://image.tmdb.org/t/p/w150";
-        	
-            var defaultPage = 1;
-            var currentPage = 1;
+</script>
+<script>
 
-            var globaldata;
-        	/*xmlhttp.withCredentials = true; -> this fail for some reason!?*/
+    var request = new XMLHttpRequest();
+    var api_key = "382652c5762a69290695a528a982a2b9";
+    var posterBaseUrl = "http://image.tmdb.org/t/p/w150";
 
-        	var get = function (name, pNum) {
-        		/* httpRequest */
-	            xmlhttp.open("GET", "https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&language=en-US&page="+pNum+"&query="+name, true);
-	            xmlhttp.send();
+    function get(name, pNum) {
+        request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=" + pNum + "&query=" + name, true);
+        request.send();
 
-	            xmlhttp.onreadystatechange = function () {
-	                if (this.readyState == 4 && this.status == 200) {
-	                    /*console.log(JSON.parse(this.responseText)); */
-	                    results(JSON.parse(this.responseText));
-
-	                    /* todo list
-	                    	- maybe use response instead of params
-	                    */
-	                    /*
-                            pagination(name, pNum);
-                        */
-
-
-	                }
-	                else if (this.readyState == 4 && this.status == 404){
-	                  /* */ 
-	                }
-	                /* */
-	            };
-  
-        	}
-            var post = function(movie) {
-
-                var data = new FormData();
-                data.append('id', movie["id"]);
-                data.append('title', movie["title"]);
-                data.append('description', movie["overview"]);
-                if(movie.poster_path) {
-                    data.append('poster', movie["poster_path"])
-                }
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST", "http://localhost:5000/reviews", true);
-                xmlhttp.send(data);
-
-                xmlhttp.onreadystatechange = function () {
-
-                    var container = document.getElementById('container');
-                    if (this.readyState == 4 && this.status == 200) {
-                        /* */ 
-                    }
-                    else if (this.readyState == 4 && this.status == 404) {
-                        /* */ 
-                    }
-                }
+        request.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                results(JSON.parse(this.responseText));
+            } else if (this.readyState == 4 && this.status == 404) {
             }
+        };
 
+    }
+    function post(movie) {
+        var data = new FormData();
+        data.append('id', movie["id"]);
+        data.append('title', movie["title"]);
+        data.append('description', movie["overview"]);
+        if (movie.poster_path) {
+            data.append('poster', movie["poster_path"])
+        }
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "http://localhost:5000/reviews", true);
+        xmlhttp.send(data);
+        xmlhttp.onreadystatechange = function () {
 
-        	var results = function(data){
-
-                globaldata = data.results;
-                console.log(data);
-        		var container = document.getElementById("container");
-                container.innerHTML="";
-        		var ul = document.createElement("ul");
-                
-                container.appendChild(ul);
-
-        		for (var i = data.results.length - 1; i >= 0; i--) {
-
-                    /* poster */
-                    var poster = document.createElement("img");
-                    poster.setAttribute("src", posterBaseUrl + data.results[i].poster_path);
-        			poster.className += "poster";
-                    /* title */
-        			var title = document.createElement("h1");
-        			title.innerHTML = data.results[i].title;
-                    title.className +="title";
-                    /* overview */
-                    var overview = document.createElement("p");
-                    overview.innerHTML = data.results[i].overview;
-                    overview.className +="overview";
-
-                    /* movie container*/
-                    var movie = document.createElement("div");        			
-                    movie.appendChild(title);
-                    movie.appendChild(overview);
-                    movie.appendChild(poster);
-                    
-        			ul.appendChild(document.createElement("li").appendChild(movie));
-
-                    var bt = document.createElement("button");
-                    bt.innerHTML = 'post';
-                    bt.className += "button"
-                    bt.id = data.results[i].id;
-                    bt.setAttribute("onclick", "btpost(this)");
-
-                    movie.appendChild(bt);
-        			/* TODO: segment li on blocks of 2-3 results per page*/
-        		};
-
-                var page = data.page;
-                var total_pages = data.total_pages; 
-
-                pagination( page, total_pages);
-        	}
-
-            var btpost = function(bt){
-                var target = bt.id;
-                var buttons = document.getElementsByClassName("button");
-                var buttonsCount = buttons.length;
-
-                for(var i = 0; i < buttonsCount; i++){
-                    var is = buttons[i].id;
-
-                    if(is == target){
-                        var t = globaldata[i].id
-                        console.log(t);
-                    }  
-                }
+            var container = document.getElementById('container');
+            if (this.readyState == 4 && this.status == 200) {
             }
-
-        	var pagination = function(pNum, pTotal){
-
-
-        		var pag = document.getElementById("pagination");
-                var t = pTotal;
-
-                pag.innerHTML="";
-
-                if (t > 1){
+            else if (this.readyState == 4 && this.status == 404) {
+            }
+        }
+    }
 
 
-                    /* next page*/
-                    var next = document.createElement('a');
-                    next.innerHTML = "next";
-                    pag.appendChild(next);
+    function results(data) {
+        var movie_data = data.results;
+        var container = $("#container");
+        container.empty();
+        var ul = $("<ul></ul>");
+        container.append(ul);
 
-                    for (var i = 1 ; i <= t ; ++i) {
-                        var nPagina = document.createElement('a');
-                        nPagina.innerHTML = i;
-                        pag.appendChild(nPagina);
-                    };
+        movie_data.forEach(function (datum) {
+            var poster = $("<img>");
+            poster.attr("src", posterBaseUrl + datum.poster_path);
+            poster.addClass("poster");
+            var title = $("<h1></h1>");
+            title.html(datum.title);
+            title.addClass("name");
 
+            var overview = $("<p></p>");
+            overview.html(datum.overview);
+            overview.addClass('descr');
 
-                    /* prev page*/
-                    var prev = document.createElement('a');
-                    prev.innerHTML = "prev";
-                    pag.appendChild(prev);
+            var movie = $("<div></div>");
+            movie.append(title);
+            movie.append(overview);
+            movie.append(poster);
+            ul.append($("<li></li>").append(movie));
 
-                }
-              
+            var bt = $("<button>Add To Collection</button>");
+            bt.attr('id', datum.id);
+            bt.addClass('id');
 
-                /* todo list:
-				- make onclick functions 
-				
-                */
+            bt.on('click', function (evt) {
+                div = $(evt.target).parent();
+                var id = div.find('.id').first().attr('id');
+                var name = div.find('.name').first().text();
+                var descr = div.find('.descr').first().text();
+                var poster = div.find('.poster').first().attr('src');
+                var post_data = {'id': id, 'name': name, 'descr': descr, 'poster': poster};
+                $.post('http://localhost:5000/movies', JSON.stringify(post_data), function (msj) {
+                    console.log(msj)
+                });
+            });
+            movie.append(bt);
+        });
 
-        	}
+        var page = data.page;
+        var total_pages = data.total_pages;
 
-        	var form = document.getElementById("search");
-        	form.onsubmit = function(response) {
-	            response.preventDefault();
+        pagination(page, total_pages);
+    }
 
-	            var name = document.getElementById("name").value;
-	           	
-                defaultPage = response.page;
-               
-                
-	            get(name, response.page);
-                /*
-                    pagination
-                */
+    function pagination(pNum, pTotal) {
+        var pag = document.getElementById("pagination");
+        var t = pTotal;
 
-	            name.value = "";
-        	};
-		</script>
-	</body>
+        pag.innerHTML = "";
+
+        if (t > 1) {
+            /* next page*/
+            var next = $('<a>next</a>');
+            pag.appendChild(next);
+
+            for (var i = 1; i <= t; ++i) {
+                var nPagina = document.createElement('a');
+                nPagina.innerHTML = i;
+                pag.appendChild(nPagina);
+            }
+            /* prev page*/
+            var prev = document.createElement('a');
+            prev.innerHTML = "prev";
+            pag.appendChild(prev);
+        }
+    }
+
+    var form = $("#search");
+    form.on("submit", function (response) {
+        response.preventDefault();
+        var name = document.getElementById("name").value;
+        get(name, response.page);
+        name.value = "";
+    });
+</script>
+</body>
 </html>
