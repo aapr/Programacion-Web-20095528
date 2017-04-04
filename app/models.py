@@ -11,15 +11,15 @@ class Movie(db.Model):
     reviews = db.relationship('Review', backref='movie', lazy='dynamic')
 
     def __init__(self, id, name, description, poster):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.poster = poster
+        self.Id = id
+        self.Name = name
+        self.Description = description
+        self.Poster = poster
 
     def __repr__(self):
         return '<Movie %r>' % (self.name)
 
-    def serie(self):
+    def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -29,8 +29,8 @@ class Movie(db.Model):
 
 
 class Review(db.Model):
-    Id = db.Column(db.Integer, primary_key=True)
-    Title = db.Column(db.String(64), index=True, unique=True)
+    Id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Title = db.Column(db.String(64))
     Description = db.Column(db.String(150))
     Rating = db.Column(db.Integer)
     User = db.Column(db.String(64))
@@ -40,13 +40,13 @@ class Review(db.Model):
     def __init__(self, title, desc, movieid, user, deviceid=0, rating=0):
         self.Title = title
         self.Description = desc
-        self.Rating = rating
+        self.MovieId = movieid
         self.User = user
         self.DeviceId = deviceid
-        self.MovieId = movieid
+        self.Rating = rating
 
     def __repr__(self):
-        return '<Review %r>' & (Review.Title)
+        return '<Review %r>' % (Review.Title)
 
     def serialize(self):
         return {

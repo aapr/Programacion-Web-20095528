@@ -13,17 +13,15 @@
         <label for="name">Name</label>
         <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" data-list="#mylist">
     </div>
-    <button id="submit" type="submit">Submit</button>
+    <button id="submit" class="submit_button" type="submit">Submit</button>
     <div id="pagination"></div>
-</form>
-<form id="review">
     <div class="form-group">
         <label for="title">Review Title:</label>
         <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails">
     </div>
     <div class="form-group">
-        <label for="desc">Description:</label>
-        <textarea type="text" class="form-control" id="desc" name="description"
+        <label for="descr">Description:</label>
+        <textarea type="text" class="form-control" id="descr" name="description"
                   placeholder="Lorem ipsum dolor sit amet"></textarea>
     </div>
     <div class="form-group">
@@ -34,7 +32,7 @@
         <label for="user">Username:</label>
         <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
     </div>
-    <button id="review_button" type="submit">Post Review</button>
+    <button id="review_button" class="review_button" type="submit">Post Review</button>
 </form>
 <ul id="mylist" hidden>
 	<li>Ada</li>
@@ -165,9 +163,23 @@
     form.on("submit", function (response) {
         response.preventDefault();
         var name = document.getElementById("name").value;
-        get(name, response.page);
+        //get(name, response.page);
         name.value = "";
-    });
+    })
+
+    var review_button = $("#review_button").on("click", function (evt) {
+        /*TODO
+        need movie id
+         */
+        var title = $("#title").val();
+        var descr = $("#descr").val();
+        var score = $("#score").val();
+        var user = $("#user").val();
+        var post_data = {'title': title, 'descr': descr, 'score': score, 'user': user};
+
+        $.post('http://localhost:5000/reviews', JSON.stringify(post_data), function (msj) {
+            console.log(msj)});
+    })
 </script>
 </body>
 </html>

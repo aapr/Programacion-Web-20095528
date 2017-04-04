@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.config import Config
 from app.models import db
-from app.review.controllers import main, movie
+from app.review.controllers import main
 
 app = Flask(__name__)
 
@@ -11,4 +11,3 @@ db.init_app(app)
 db.create_all(app=app)
 
 app.register_blueprint(main, url_prefix='/')
-app.register_blueprint(movie, url_prefix='/movies')

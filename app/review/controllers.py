@@ -17,14 +17,13 @@ def index():
     return render_template('review.html')
 
 
-# @review.route('/reviews', methods=['GET'])
+@main.route('/reviews', methods=['GET'])
 def get_all_review():
     if request.method == 'GET':
         data = []
         for i in Review.query.all():
             data.append(i.serialize())
-        result = jsonify(data)
-        return result
+        return jsonify(data)
 
 
 @main.route('movies', methods=['GET'])
@@ -33,15 +32,13 @@ def get_all_movies():
         data = []
         for i in Review.query.all():
             data.append(i.serialize())
-        result = jsonify(data)
-        return result
+        return jsonify(data)
 
 
 @main.route('movies/<movie_name>', methods=['GET'])
 def get_movie_by_name():
     if request.method == 'GET':
         name = request.form['name']
-
         if Movie.query.filter_by(Name=name).startswith() > 0:
             data = Movie.query.filter_by(Name=name).startswith()
             result = jsonify(data.serialize())
@@ -51,25 +48,28 @@ def get_movie_by_name():
     return render_template('movie.html')
 
 
-# @review.route('/reviews', methods=['POST'])
+@main.route('reviews', methods=['POST'])
 def post_form_data():
-    if request.method == 'POST':
-        name = request.form['name']
+    j_data = request.get_json(True, True, False)
+    print(j_data)
+    name = 'None'
 
-        if Movie.query.filter_by(Name=name).count() > 0:
-            data = Movie.query.filter_by(Name=name).first()
+    title = j_data['title']
+    description = j_data['descr']
+    score = j_data['score']
+    user = j_data['user']
 
-            title = request.form['reviewTitle']
-            description = request.form['Description']
-            score = request.form['movieScore']
-            user = request.form['user']
+    if Movie.query.filter_by(Name=name).count() > 0:
+        data = Movie.query.filter_by(Name=name).first()
+        result = Review(title, description, data.id, user, 0, score)
+    else:
+        result = Review(title, description, 0, user, 0, score)
 
-            result = Review(title, description, data.id, data.id, user, None, score);
+    db.session.add(result)
+    db.session.commit()
+    # TODO: get movie id
 
-            db.session.add(result)
-            db.session.commit()
-
-    return render_template('review.html')
+    return jsonify(j_data)
 
 
 @main.route('movies', methods=['POST'])
