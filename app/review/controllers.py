@@ -17,7 +17,7 @@ def index():
     return render_template('review.html')
 
 
-@main.route('/reviews', methods=['GET'])
+@main.route('reviews', methods=['GET'])
 def get_all_review():
     if request.method == 'GET':
         data = []
@@ -26,11 +26,31 @@ def get_all_review():
         return jsonify(data)
 
 
-@main.route('movies', methods=['GET'])
+@main.route('reviews/has', methods=['GET'])
+def get_all_has():
+    data = []
+    for e in Review.query.distinct(Review.MovieId).all():
+        something = Movie.query.filter_by(Id=e.MovieId).first()
+        if something is not None:
+            data.append(e.serialize())
+    # TODO: calculate average score
+    return jsonify(data)
+
+
+@main.route('movies/has', methods=['GET'])
+def get_all_has():
+    j_data = request.get_json(True, True, False)
+    data = []
+    for e in Review.query.filter_by(Id=j_data.id).all():
+        data.append(e.serialize())
+    return jsonify(data)
+
+
+@main.route('movies/get', methods=['GET'])
 def get_all_movies():
     if request.method == 'GET':
         data = []
-        for i in Review.query.all():
+        for i in Movie.query.all():
             data.append(i.serialize())
         return jsonify(data)
 
@@ -41,8 +61,7 @@ def get_movie_by_name():
         name = request.form['name']
         if Movie.query.filter_by(Name=name).startswith() > 0:
             data = Movie.query.filter_by(Name=name).startswith()
-            result = jsonify(data.serialize())
-            return result
+            return jsonify(data.serialize())
         else:
             return render_template('review.html')
     return render_template('movie.html')

@@ -34,6 +34,10 @@
     </div>
     <button id="review_button" class="review_button" type="submit">Post Review</button>
 </form>
+<div>
+    <button id="getAllReviews" class="getAll_button" type="submit">get All Reviews</button>
+    <button id="getAllMovies" class="getAll_button" type="submit">get All Movies</button>
+</div>
 <ul id="mylist" hidden>
 	<li>Ada</li>
 	<li>Java</li>
@@ -94,16 +98,25 @@
         var ul = $("<ul></ul>");
         container.append(ul);
 
-        movie_data.forEach(function (datum) {
+        data.forEach(function (datum) {
+             /* TODO:
+                load poster from static else get from request
+                make it so it can take both db and request
+                -probably change models attr to resemble movie api format
+            */
             var poster = $("<img>");
             poster.attr("src", posterBaseUrl + datum.poster_path);
+            //poster.attr("src", '../static/posters/noimg.jpg');
             poster.addClass("poster");
+
             var title = $("<h1></h1>");
             title.html(datum.title);
+            title.html(datum.name);
             title.addClass("name");
 
             var overview = $("<p></p>");
             overview.html(datum.overview);
+            overview.html(datum.description);
             overview.addClass('descr');
 
             var movie = $("<div></div>");
@@ -179,6 +192,16 @@
 
         $.post('http://localhost:5000/reviews', JSON.stringify(post_data), function (msj) {
             console.log(msj)});
+    })
+
+    var getAllMovies = $("#getAllMovies").on("click", function (evt) {
+        /*TODO
+        need movie id
+         */
+        var response = $.get('http://localhost:5000/movies/get', function (msj) {
+            console.log(msj)
+            results(msj)
+        });
     })
 </script>
 </body>

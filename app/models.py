@@ -21,10 +21,10 @@ class Movie(db.Model):
 
     def serialize(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'poster': self.poster
+            'id': self.Id,
+            'name': self.Name,
+            'description': self.Description,
+            'poster': self.Poster
         }
 
 
@@ -53,7 +53,7 @@ class Review(db.Model):
             'id': self.Id,
             'title': self.Title,
             'description': self.Description,
-            'rating': self.Rating,
             'user': self.User,
-            'deviceid': self.DeviceId
+            'deviceid': self.DeviceId,
+            'rating': self.Rating
         }
