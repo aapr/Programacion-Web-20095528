@@ -1,5 +1,5 @@
 import os
-import urllib.request
+import urllib
 
 from flask import Blueprint
 from flask import request, jsonify, render_template
@@ -104,7 +104,7 @@ def create_movie():
         except:
             url_poster = j_data["poster"]
             url_local = os.path.join("app\static\posters", local_poster_name)
-            urllib.request.urlretrieve(url_poster, url_local)
+            urllib.urlretrieve(url_poster, url_local)
         finally:
             setattr(something, 'Poster', local_poster_name)
             db.session.commit()
@@ -112,7 +112,7 @@ def create_movie():
     else:
         url_poster = j_data["poster"]
         url_local = os.path.join("app\static\posters", local_poster_name)
-        urllib.request.urlretrieve(url_poster, url_local)
+        urllib.urlretrieve(url_poster, url_local)
 
         result = Movie(j_data['id'], j_data['name'], j_data['descr'], local_poster_name)
         db.session.add(result)
