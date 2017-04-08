@@ -27,7 +27,7 @@ def get_all_review():
 
 
 @main.route('reviews/has', methods=['GET'])
-def get_all_has():
+def get_all_has_review():
     data = []
     for e in Review.query.distinct(Review.MovieId).all():
         something = Movie.query.filter_by(Id=e.MovieId).first()
@@ -38,7 +38,7 @@ def get_all_has():
 
 
 @main.route('movies/has', methods=['GET'])
-def get_all_has():
+def get_all_has_movies():
     j_data = request.get_json(True, True, False)
     data = []
     for e in Review.query.filter_by(Id=j_data.id).all():
