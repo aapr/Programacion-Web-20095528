@@ -87,8 +87,9 @@
 
     return urlObj;
   }
-  
-  document.getElementById('hello').innerHTML += urlObject(document.URL).parameters[0];
+
+  var url_param = urlObject(document.URL);
+  document.getElementById('hello').innerHTML += url_param.parameters[0];
 
 </script>
 </html>
