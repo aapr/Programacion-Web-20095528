@@ -114,4 +114,4 @@ def create_movie():
 
 @main.route('details.html/<movie_id>', methods=['GET'])
 def movie_bits(movie_id):
-    return redirect('details.html', name=movie_id)
+    return redirect('details.html', movie_id)
