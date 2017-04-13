@@ -86,8 +86,10 @@
     };
 
     return urlObj;
-}
-  document.getElementById('hello').innerHTML += urlObject.parameters[0];
+  }
+
+  var url_param = urlObject();
+  document.getElementById('hello').innerHTML += url_param.parameters[0];
 
 </script>
 </html>
