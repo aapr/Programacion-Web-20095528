@@ -128,10 +128,26 @@
          ul.append($("<li></li>").append(movie));
 
          var bt = $("<button>Add To Collection</button>");
-         bt.attr('id', datum.id);
-         bt.addClass('id');
+         bt.addClass('posting');
+
+         var details_bt = $("<button>Details..</button>");
+         details_bt.addClass('details');
+
+         var sneaky = $("<p></p>");
+         sneaky.attr('type', 'hidden');
+         sneaky.attr('id', datum.id);
+         sneaky.addClass('id');
 
          bt.on('click', function (evt) {
+             div = $(evt.target).parent();
+             var id = div.find('.id').first().attr('id');
+
+             $.get(serverUrl+'details/' + id, function (msj) {
+                 console.log(msj)
+             });
+         });
+
+         details_bt.on('click', function (evt) {
              div = $(evt.target).parent();
              var id = div.find('.id').first().attr('id');
              var name = div.find('.name').first().text();
@@ -142,14 +158,10 @@
                  console.log(msj)
              });
          });
+         movie.append(sneaky);
          movie.append(bt);
+         movie.append(details_bt);
      });
-    /*
-     var page = data.page;
-     var total_pages = data.total_pages;
-
-    pagination(page, total_pages);
-    */
  }
 
  function pagination(pNum, pTotal) {
