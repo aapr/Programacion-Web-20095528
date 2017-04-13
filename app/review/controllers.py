@@ -110,3 +110,8 @@ def create_movie():
         print('new entry')
 
     return jsonify(j_data)
+
+
+@main.route('details.html/<movie_id>', methods=['GET'])
+def movie_bits(movie_id):
+    return redirect('details.html', id=movie_id)
