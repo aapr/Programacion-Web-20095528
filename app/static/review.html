@@ -144,11 +144,12 @@
          });
          movie.append(bt);
      });
-
+    /*
      var page = data.page;
      var total_pages = data.total_pages;
 
-     pagination(page, total_pages);
+    pagination(page, total_pages);
+    */
  }
 
  function pagination(pNum, pTotal) {
@@ -202,7 +203,7 @@
         spoon_feed = formats return msj from server similar to movie api request
       */
      var spoon_feed = {};
-     $.get(serverUrl+'movies/get', function (msj) {
+     $.get(serverUrl+'movies', function (msj) {
          spoon_feed["results"] = msj;
          results(spoon_feed)
      });

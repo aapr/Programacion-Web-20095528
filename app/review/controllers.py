@@ -89,7 +89,7 @@ def create_movie():
     something = Movie.query.filter_by(Id=j_data['id']).first()
     if something is not None:
         try:
-            file = open('posters/' + something.Poster, 'r')
+            file = open(os.path.join("posters", something.Poster), 'r')
             file.close()
         except:
             url_poster = j_data["poster"]
