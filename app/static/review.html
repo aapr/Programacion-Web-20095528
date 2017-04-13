@@ -142,7 +142,7 @@
              div = $(evt.target).parent();
              var id = div.find('.id').first().attr('id');
 
-             $.load(serverUrl+'details.html?movie_id=' + id, function (msj) {
+             $.get(serverUrl+'details.html?movie_id=' + id, function (msj) {
                  console.log(msj)
              });
          });
