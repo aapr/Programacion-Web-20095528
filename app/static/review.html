@@ -138,7 +138,7 @@
          sneaky.attr('id', datum.id);
          sneaky.addClass('id');
 
-         bt.on('click', function (evt) {
+         details_bt.on('click', function (evt) {
              div = $(evt.target).parent();
              var id = div.find('.id').first().attr('id');
 
@@ -147,7 +147,7 @@
              });
          });
 
-         details_bt.on('click', function (evt) {
+         bt.on('click', function (evt) {
              div = $(evt.target).parent();
              var id = div.find('.id').first().attr('id');
              var name = div.find('.name').first().text();
