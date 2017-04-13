@@ -16,11 +16,7 @@ def index():
 
 @main.route('reviews', methods=['GET'])
 def get_all_review():
-    if request.method == 'GET':
-        data = []
-        for i in Review.query.all():
-            data.append(i.serialize())
-        return jsonify(data)
+        return jsonify([i.serialize() for i in Review.query.all()])
 
 
 @main.route('reviews/has', methods=['GET'])
@@ -45,23 +41,13 @@ def get_all_has_movies():
 
 @main.route('movies', methods=['GET'])
 def get_all_movies():
-    data = []
-    for i in Movie.query.all():
-        data.append(i.serialize())
-    return jsonify(data)
+    return jsonify([i.serialize() for i in Movie.query.all()])
 
 
 @main.route('movies/<movie_name>', methods=['GET'])
-def get_movie_by_name():
-    if request.method == 'GET':
-        name = request.form['name']
-        if Movie.query.filter_by(Name=name).startswith() > 0:
-            data = Movie.query.filter_by(Name=name).startswith()
-            return jsonify(data.serialize())
-        else:
-            return redirect('static/review.html')
-    return  redirect('static/movie.html')
-
+def get_movie_by_name(movie_name):
+    p=Movie.Name.startswith(movie_name);
+    return jsonify([i.serialize() for i in Movie.query.filter( p ).all()])
 
 @main.route('reviews', methods=['POST'])
 def post_form_data():
