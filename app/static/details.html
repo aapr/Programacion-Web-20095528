@@ -3,7 +3,7 @@
   <title>Hello</title>
 </head>
 <body>
-  <h1 id="hello">Hello</h1>
+  <h1 id="hello ">Hello</h1>
 </body>
 <script>
   function urlObject(options) {
@@ -87,9 +87,8 @@
 
     return urlObj;
   }
-
-  var url_param = urlObject();
-  document.getElementById('hello').innerHTML += url_param.parameters[0];
+  
+  document.getElementById('hello').innerHTML += urlObject(document.URL).parameters[0];
 
 </script>
 </html>
