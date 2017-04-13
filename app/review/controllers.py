@@ -10,9 +10,11 @@ main = Blueprint('main', __name__)
 
 # movie = Blueprint('movie', __name__)
 
+
 @main.route('/')
 def index():
     return redirect('review.html')
+
 
 @main.route('reviews', methods=['GET'])
 def get_all_review():
@@ -46,8 +48,14 @@ def get_all_movies():
 
 @main.route('movies/<movie_name>', methods=['GET'])
 def get_movie_by_name(movie_name):
-    p=Movie.Name.startswith(movie_name);
-    return jsonify([i.serialize() for i in Movie.query.filter( p ).all()])
+    p = Movie.Name.startswith(movie_name)
+    return jsonify([i.serialize() for i in Movie.query.filter(p).all()])
+
+
+@main.route('movies/<movie_id>', methods=['GET'])
+def get_all_movie_reviews(movie_id):
+    return jsonify([i.serialize() for i in Movie.query.filter_by(Id=movie_id).all()])
+
 
 @main.route('reviews', methods=['POST'])
 def post_form_data():
@@ -81,11 +89,11 @@ def create_movie():
     something = Movie.query.filter_by(Id=j_data['id']).first()
     if something is not None:
         try:
-            file = open('app/static/posters/' + something.Poster, 'r')
+            file = open('posters/' + something.Poster, 'r')
             file.close()
         except:
             url_poster = j_data["poster"]
-            url_local = os.path.join("app\static\posters", local_poster_name)
+            url_local = os.path.join("posters", local_poster_name)
             urllib.urlretrieve(url_poster, url_local)
         finally:
             setattr(something, 'Poster', local_poster_name)
@@ -93,7 +101,7 @@ def create_movie():
             print('old entry')
     else:
         url_poster = j_data["poster"]
-        url_local = os.path.join("app\static\posters", local_poster_name)
+        url_local = os.path.join("posters", local_poster_name)
         urllib.urlretrieve(url_poster, url_local)
 
         result = Movie(j_data['id'], j_data['name'], j_data['descr'], local_poster_name)
