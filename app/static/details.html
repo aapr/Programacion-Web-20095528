@@ -89,7 +89,8 @@
   }
 
   var url_param = urlObject(document.URL);
-  document.getElementById('hello').innerHTML += url_param.parameters[0];
+  console.log(url_param)
+  document.getElementById('hello').innerHTML += url_param.parameters.movie_id;
 
 </script>
 </html>
