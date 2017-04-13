@@ -5,7 +5,7 @@ from app.models import db
 from app.review.controllers import main
 from prefixmid import PrefixMiddleware
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='',static_folder='static')
 
 app.config.from_object(Config)
 app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix='/arnulfo')

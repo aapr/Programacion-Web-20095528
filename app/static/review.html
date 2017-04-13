@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="css/awesomplete.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<form id="search">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" data-list="#mylist">
+    </div>
+    <button id="submit" class="submit_button" type="submit">Submit</button>
+    <div id="pagination"></div>
+    <div class="form-group">
+        <label for="title">Review Title:</label>
+        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails">
+    </div>
+    <div class="form-group">
+        <label for="descr">Description:</label>
+        <textarea type="text" class="form-control" id="descr" name="description"
+                  placeholder="Lorem ipsum dolor sit amet"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="score">Score:</label>
+        <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
+    </div>
+    <div class="form-group">
+        <label for="user">Username:</label>
+        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
+    </div>
+    <button id="review_button" class="review_button" type="submit">Post Review</button>
+</form>
+<div>
+    <button id="getAllReviews" class="getAll_button" type="submit">get All Reviews</button>
+    <button id="getAllMovies" class="getAll_button" type="submit">get All Movies</button>
+</div>
+<ul id="mylist" hidden>
+	<li>Ada</li>
+	<li>Java</li>
+	<li>JavaScript</li>
+	<li>Brainfuck</li>
+	<li>LOLCODE</li>
+	<li>Node.js</li>
+	<li>Ruby on Rails</li>
+</ul>
+<div id="container"></div>
+<script src="js/awesomplete.js" async></script>
+<script>
+
+ var request = new XMLHttpRequest();
+ var api_key = "382652c5762a69290695a528a982a2b9";
+ var posterBaseUrl = "http://image.tmdb.org/t/p/w150";
+ //    var serverUrl = "http://45.55.77.201:5528/";
+ var serverUrl = "";
+
+ function get(name, pNum) {
+     request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=" + pNum + "&query=" + name, true);
+     request.send();
+
+     request.onreadystatechange = function () {
+         if (this.readyState == 4 && this.status == 200) {
+             results(JSON.parse(this.responseText));
+         } else if (this.readyState == 4 && this.status == 404) {
+         }
+     };
+
+ }
+ function post(movie) {
+     var data = new FormData();
+     data.append('id', movie["id"]);
+     data.append('title', movie["title"]);
+     data.append('description', movie["overview"]);
+     if (movie.poster_path) {
+         data.append('poster', movie["poster_path"])
+     }
+     var xmlhttp = new XMLHttpRequest();
+     xmlhttp.open("POST", serverUrl+"reviews", true);
+     xmlhttp.send(data);
+     xmlhttp.onreadystatechange = function () {
+
+         var container = document.getElementById('container');
+         if (this.readyState == 4 && this.status == 200) {
+         }
+         else if (this.readyState == 4 && this.status == 404) {
+         }
+     }
+ }
+
+
+ function results(data) {
+     var movie_data = data.results;
+     console.log(data);
+     console.log(movie_data);
+     var container = $("#container");
+     container.empty();
+     var ul = $("<ul></ul>");
+     container.append(ul);
+
+     movie_data.forEach(function (datum) {
+         /* TODO:
+            load poster from static else get from request
+            make it so it can take both db and request
+            -probably change models attr to resemble movie api format
+          */
+         var poster = $("<img>");
+         poster.attr("src", posterBaseUrl + datum.poster_path);
+         //poster.attr("src", 'posters/noimg.jpg');
+         poster.addClass("poster");
+
+         var title = $("<h1></h1>");
+         title.html(datum.title);
+         title.html(datum.name);
+         title.addClass("name");
+
+         var overview = $("<p></p>");
+         overview.html(datum.overview);
+         overview.html(datum.description);
+         overview.addClass('descr');
+
+         var movie = $("<div></div>");
+         movie.append(title);
+         movie.append(overview);
+         movie.append(poster);
+         ul.append($("<li></li>").append(movie));
+
+         var bt = $("<button>Add To Collection</button>");
+         bt.attr('id', datum.id);
+         bt.addClass('id');
+
+         bt.on('click', function (evt) {
+             div = $(evt.target).parent();
+             var id = div.find('.id').first().attr('id');
+             var name = div.find('.name').first().text();
+             var descr = div.find('.descr').first().text();
+             var poster = div.find('.poster').first().attr('src');
+             var post_data = {'id': id, 'name': name, 'descr': descr, 'poster': poster};
+             $.post(serverUrl+'movies', JSON.stringify(post_data), function (msj) {
+                 console.log(msj)
+             });
+         });
+         movie.append(bt);
+     });
+
+     var page = data.page;
+     var total_pages = data.total_pages;
+
+     pagination(page, total_pages);
+ }
+
+ function pagination(pNum, pTotal) {
+     var pag = document.getElementById("pagination");
+     var t = pTotal;
+
+     pag.innerHTML = "";
+
+     if (t > 1) {
+         /* next page*/
+         var next = $('<a>next</a>');
+         pag.appendChild(next);
+
+         for (var i = 1; i <= t; ++i) {
+             var nPagina = document.createElement('a');
+             nPagina.innerHTML = i;
+             pag.appendChild(nPagina);
+         }
+         /* prev page*/
+         var prev = document.createElement('a');
+         prev.innerHTML = "prev";
+         pag.appendChild(prev);
+     }
+ }
+
+ var form = $("#search");
+ form.on("submit", function (response) {
+     response.preventDefault();
+     var name = document.getElementById("name").value;
+     get(name, response.page);
+     name.value = "";
+ })
+
+ var review_button = $("#review_button").on("click", function (evt) {
+     /*TODO
+        need movie id
+      */
+     var title = $("#title").val();
+     var descr = $("#descr").val();
+     var score = $("#score").val();
+     var user = $("#user").val();
+     var post_data = {'title': title, 'descr': descr, 'score': score, 'user': user};
+
+     $.post(serverUrl+'reviews', JSON.stringify(post_data), function (msj) {
+         console.log(msj)});
+ })
+
+ var getAllMovies = $("#getAllMovies").on("click", function (evt) {
+     /*TODO
+        need movie id
+        spoon_feed = formats return msj from server similar to movie api request
+      */
+     var spoon_feed = {};
+     $.get(serverUrl+'movies/get', function (msj) {
+         spoon_feed["results"] = msj;
+         results(spoon_feed)
+     });
+ })
+</script>
+</body>
+</html>

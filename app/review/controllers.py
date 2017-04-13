@@ -2,20 +2,17 @@ import os
 import urllib
 
 from flask import Blueprint
-from flask import request, jsonify, render_template
+from flask import request, jsonify, redirect
 
 from app.models import Movie, Review, db
 
 main = Blueprint('main', __name__)
 
-
 # movie = Blueprint('movie', __name__)
-
 
 @main.route('/')
 def index():
-    return render_template('review.html')
-
+    return redirect('review.html')
 
 @main.route('reviews', methods=['GET'])
 def get_all_review():
@@ -46,13 +43,12 @@ def get_all_has_movies():
     return jsonify(data)
 
 
-@main.route('movies/get', methods=['GET'])
+@main.route('movies', methods=['GET'])
 def get_all_movies():
-    if request.method == 'GET':
-        data = []
-        for i in Movie.query.all():
-            data.append(i.serialize())
-        return jsonify(data)
+    data = []
+    for i in Movie.query.all():
+        data.append(i.serialize())
+    return jsonify(data)
 
 
 @main.route('movies/<movie_name>', methods=['GET'])
@@ -63,8 +59,8 @@ def get_movie_by_name():
             data = Movie.query.filter_by(Name=name).startswith()
             return jsonify(data.serialize())
         else:
-            return render_template('review.html')
-    return render_template('movie.html')
+            return redirect('static/review.html')
+    return  redirect('static/movie.html')
 
 
 @main.route('reviews', methods=['POST'])
