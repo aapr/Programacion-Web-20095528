@@ -142,13 +142,13 @@
          sneaky.addClass('id');
 
          context.on('click', function (evt) {
-             div = $(evt.target).parent();
+             div = $(evt.target).parents();
              var id = div.find('.id').first().attr('id');
              window.location = (serverUrl+'details.html?movie_id=' + id);
          });
 
          bt.on('click', function (evt) {
-             div = $(evt.target).parent();
+             div = $(evt.target).parent('div');
              var id = div.find('.id').first().attr('id');
              var name = div.find('.name').first().text();
              var descr = div.find('.descr').first().text();
