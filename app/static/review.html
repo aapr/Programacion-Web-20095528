@@ -11,7 +11,7 @@
 <form id="search">
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" oninput="suggestion(this.value)" required>
+        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" name="Movie Name" required>
     </div>
     <button id="submit" class="submit_button" type="submit">Submit</button>
 </form>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-group">
         <label for="score">Score:</label>
-        <input type="range" class="form-control" min="1" max="5" step="1" id="score" name="movieScore"required>
+        <input type="range" class="form-control" min="1" max="5" step="1" id="score" name="movieScore" required>
     </div>
     <div class="form-group">
         <label for="user">Username:</label>
@@ -95,7 +95,7 @@
  var input = document.getElementById("name");
  var disque = new Awesomplete(input);
 
- function suggestion(name){
+/* function suggestion(name){
      //mylist.push(name.toLowerCase())
 
      $.get("https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=1" + "&query=" + name,function(msj){
@@ -107,7 +107,7 @@
      });
     disque.list = mylist;
 
- }
+ }*/
  function results(data) {
      var movie_data = data.results;
      console.log(data);
