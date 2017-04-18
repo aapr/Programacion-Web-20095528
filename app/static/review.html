@@ -11,15 +11,13 @@
 <form id="search">
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" name="Movie Name" required>
+        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" name="movieName">
     </div>
     <button id="submit" class="submit_button" type="submit">Submit</button>
-</form>
-<form id="review_form">
     <div id="pagination"></div>
     <div class="form-group">
         <label for="title">Review Title:</label>
-        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails" required>
+        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails">
     </div>
     <div class="form-group">
         <label for="descr">Description:</label>
@@ -28,11 +26,11 @@
     </div>
     <div class="form-group">
         <label for="score">Score:</label>
-        <input type="range" class="form-control" min="1" max="5" step="1" id="score" name="movieScore" required>
+        <input type="range" class="form-control" min="1" max="5" step="1" id="score" name="movieScore">
     </div>
     <div class="form-group">
         <label for="user">Username:</label>
-        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff" required>
+        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
     </div>
     <button id="review_button" class="review_button" type="submit">Post Review</button>
 </form>
