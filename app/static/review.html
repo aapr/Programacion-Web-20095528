@@ -112,9 +112,11 @@
          poster.addClass("poster");
 
          var title = $("<h1></h1>");
-         title.html(datum.title);
-         title.html(datum.name);
-         title.addClass("name");
+         var context = $("<a></a>")
+         context.html(datum.title);
+         context.html(datum.name);
+         context.addClass("name");
+         context.attr('href','#')
 
          var overview = $("<p></p>");
          overview.html(datum.overview);
@@ -130,15 +132,15 @@
          var bt = $("<button>Add To Collection</button>");
          bt.addClass('posting');
 
-         var details_bt = $("<button>Details..</button>");
-         details_bt.addClass('details');
+         /*var details_bt = $("<button>Details..</button>");
+         details_bt.addClass('details');*/
 
          var sneaky = $("<p></p>");
          sneaky.attr('type', 'hidden');
          sneaky.attr('id', datum.id);
          sneaky.addClass('id');
 
-         details_bt.on('click', function (evt) {
+         context.on('click', function (evt) {
              div = $(evt.target).parent();
              var id = div.find('.id').first().attr('id');
              window.location = (serverUrl+'details.html?movie_id=' + id);
@@ -157,7 +159,7 @@
          });
          movie.append(sneaky);
          movie.append(bt);
-         movie.append(details_bt);
+         /*movie.append(details_bt);*/
      });
  }
 
