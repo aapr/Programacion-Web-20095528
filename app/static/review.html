@@ -206,7 +206,7 @@
      var name = document.getElementById("name").value;
      get(name, response.page);
      name.value = "";
- })
+ });
 
  var review_button = $("#review_button").on("click", function (evt) {
      /*TODO
@@ -220,7 +220,7 @@
 
      $.post(serverUrl+'reviews', JSON.stringify(post_data), function (msj) {
          console.log(msj)});
- })
+ });
 
  var getAllMovies = $("#getAllMovies").on("click", function (evt) {
      /*TODO
