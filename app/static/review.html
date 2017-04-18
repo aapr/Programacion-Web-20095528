@@ -14,6 +14,8 @@
         <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" data-list="#mylist">
     </div>
     <button id="submit" class="submit_button" type="submit">Submit</button>
+</form>
+<form id="">
     <div id="pagination"></div>
     <div class="form-group">
         <label for="title">Review Title:</label>
@@ -26,7 +28,7 @@
     </div>
     <div class="form-group">
         <label for="score">Score:</label>
-        <input type="range" class="form-control" min="1" max="5" step="1" id="score" name="movieScore">
+        <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
     </div>
     <div class="form-group">
         <label for="user">Username:</label>
@@ -48,7 +50,8 @@
 	<li>Ruby on Rails</li>
 </ul>
 <div id="container"></div>
-<script src="js/awesomplete.js" async>
+<script src="js/awesomplete.js" async></script>
+<script>
 
  var request = new XMLHttpRequest();
  var api_key = "382652c5762a69290695a528a982a2b9";
@@ -56,15 +59,12 @@
  //    var serverUrl = "http://45.55.77.201:5528/";
  var serverUrl = "";
 
- var mylist = [];
-
  function get(name, pNum) {
      request.open("GET", "https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=" + pNum + "&query=" + name, true);
      request.send();
 
      request.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
-             console.log(this.responseText);
              results(JSON.parse(this.responseText));
          } else if (this.readyState == 4 && this.status == 404) {
          }
@@ -92,19 +92,7 @@
      }
  }
 
-/* function suggestion(name){
-     //mylist.push(name.toLowerCase())
 
-     $.get("https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=1" + "&query=" + name,function(msj){
-         if(msj.length > 0){
-             for(var i=0; i<msj.length; i++){
-                 mylist.push(msj[i].title);
-             }
-         }
-     });
-    disque.list = mylist;
-
- }*/
  function results(data) {
      var movie_data = data.results;
      console.log(data);
@@ -204,11 +192,10 @@
  var form = $("#search");
  form.on("submit", function (response) {
      response.preventDefault();
-     console.log(response);
      var name = document.getElementById("name").value;
      get(name, response.page);
      name.value = "";
- });
+ })
 
  var review_button = $("#review_button").on("click", function (evt) {
      /*TODO
@@ -222,7 +209,7 @@
 
      $.post(serverUrl+'reviews', JSON.stringify(post_data), function (msj) {
          console.log(msj)});
- });
+ })
 
  var getAllMovies = $("#getAllMovies").on("click", function (evt) {
      /*TODO
