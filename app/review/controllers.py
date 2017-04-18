@@ -24,11 +24,16 @@ def get_all_review():
 @main.route('reviews/has', methods=['GET'])
 def get_all_has_review():
     data = []
-    for e in Review.query.distinct(Review.MovieId).all():
-        something = Movie.query.filter_by(Id=e.MovieId).first()
-        if something is not None:
-            data.append(e.serialize())
-    # TODO: calculate average score
+    movies = [e.serialize() for e in Movie.query.all()]
+    reviewed = [e for e in movies if e['review'] is not None]
+    for e in reviewed:
+        count = 0
+        aux = 0
+        for i in e['review']:
+            count += 1
+            aux += i['rating']
+            average = float(aux) / float(count)
+            e['average'] = round(average, 1)
     return jsonify(data)
 
 

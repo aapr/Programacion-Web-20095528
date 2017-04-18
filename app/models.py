@@ -24,7 +24,8 @@ class Movie(db.Model):
             'id': self.Id,
             'name': self.Name,
             'description': self.Description,
-            'poster': self.Poster
+            'poster': self.Poster,
+            "reviews": [review.serialize() for review in self.reviews.all()]
         }
 
 
