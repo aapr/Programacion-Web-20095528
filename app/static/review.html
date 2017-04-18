@@ -11,7 +11,7 @@
 <form id="search">
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" oninput='suggestion(this.value)'>
+        <input type="text" class="form-control awesomplete" id="name" placeholder="Birdemic" oninput='suggestion(this.value)' required>
     </div>
     <button id="submit" class="submit_button" type="submit">Submit</button>
     <div id="pagination"></div>
@@ -100,9 +100,9 @@
                  mylist.push(msj[i].title);
              }
          }
-     })
+     });
 
-     new Awsomeplete(input,{
+     new Awesomplete(input,{
          list: mylist
      });
  }
