@@ -90,10 +90,12 @@
          }
      }
  }
+ var input = $("#name");
+ var disque = new Awesomplete(input);
 
  function suggestion(name){
      //mylist.push(name.toLowerCase())
-     var input = $("#title");
+
      $.get("https://api.themoviedb.org/3/search/movie?api_key=" + api_key + "&language=en-US&page=1" + "&query=" + name,function(msj){
          if(msj.length > 0){
              for(var i=0; i<msj.length; i++){
@@ -101,10 +103,8 @@
              }
          }
      });
+    disque.list = mylist;
 
-     new Awesomplete(input,{
-         list: mylist
-     });
  }
  function results(data) {
      var movie_data = data.results;
