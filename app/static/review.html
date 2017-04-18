@@ -116,7 +116,8 @@
          context.html(datum.title);
          context.html(datum.name);
          context.addClass("name");
-         context.attr('href','#')
+         context.attr('href','#');
+         title.append(context);
 
          var overview = $("<p></p>");
          overview.html(datum.overview);
