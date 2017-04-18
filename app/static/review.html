@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+    <a href="review.html"><b>review.html.</b></a>
 <form id="search">
     <div class="form-group">
         <label for="name">Name</label>
@@ -17,20 +18,20 @@
     <div id="pagination"></div>
     <div class="form-group">
         <label for="title">Review Title:</label>
-        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails">
+        <input type="text" class="form-control awesomplete" id="title" name="reviewTitle" placeholder="Review Title" data-list="Ada, Java, JavaScript, Brainfuck, LOLCODE, Node.js, Ruby on Rails" required>
     </div>
     <div class="form-group">
         <label for="descr">Description:</label>
         <textarea type="text" class="form-control" id="descr" name="description"
-                  placeholder="Lorem ipsum dolor sit amet"></textarea>
+                  placeholder="Lorem ipsum dolor sit amet" required></textarea>
     </div>
     <div class="form-group">
         <label for="score">Score:</label>
-        <input type="text" class="form-control" id="score" name="movieScore" placeholder="Movie Score">
+        <input type="text" class="range" min="1" max="5" step="1" id="score" name="movieScore"required>
     </div>
     <div class="form-group">
         <label for="user">Username:</label>
-        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff">
+        <input type="text" class="form-control" id="user" name="User" placeholder="Jeff" required>
     </div>
     <button id="review_button" class="review_button" type="submit">Post Review</button>
 </form>
